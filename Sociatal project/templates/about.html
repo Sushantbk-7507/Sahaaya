@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}About Sahaaya – Mission &amp; SDG Alignment{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-white border-bottom">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-8">
+                <span class="badge-category mb-2 d-inline-block">BMS Institute of Technology and Management &bull; Dept. of AI &amp; ML</span>
+                <h1 class="section-heading mb-3">About Sahaaya</h1>
+                <p class="lead text-secondary">
+                    Sahaaya is a centralized web platform connecting individuals willing to provide assistance with verified social welfare organizations.
+                </p>
+                <p class="text-secondary mb-0">
+                    Many well-meaning citizens struggle to locate trustworthy orphanages, old-age homes, and community shelters because information across the web is scattered, unverified, or outdated. Sahaaya solves this gap through administrator-verified profiles, location-based discovery, itemized assistance requirements, and direct supporter-to-organization communication—without acting as a payment intermediary.
+                </p>
+            </div>
+            <div class="col-lg-4">
+                <div class="surface-card p-4 bg-light">
+                    <h5 class="fw-bold text-navy mb-2">Core Principles</h5>
+                    <ul class="list-unstyled small d-grid gap-2 mb-0">
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i>Mandatory Admin Verification</li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i>Transparent Itemized Requirements</li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i>Direct Call, Email &amp; Map Navigation</li>
+                        <li><i class="fa-solid fa-check-circle text-success me-2"></i>Community Inaccuracy Reporting</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="mb-4">
+            <span class="text-uppercase fw-bold small" style="color: var(--teal-700);">Global Impact Alignment</span>
+            <h2 class="section-heading">UN Sustainable Development Goals (SDGs)</h2>
+            <p class="text-secondary">Sahaaya directly contributes to five United Nations Sustainable Development Goals.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="sdg-card">
+                    <span class="badge bg-danger mb-2">SDG 1</span>
+                    <h5 class="fw-bold">No Poverty</h5>
+                    <p class="small text-secondary mb-0">Connects community resources, essential supplies, and support directly with vulnerable communities and shelters.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="sdg-card">
+                    <span class="badge bg-warning text-dark mb-2">SDG 2</span>
+                    <h5 class="fw-bold">Zero Hunger</h5>
+                    <p class="small text-secondary mb-0">Helps supporters immediately identify welfare centers requiring staple food grains, nutrition supplements, and meal supplies.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="sdg-card">
+                    <span class="badge bg-primary mb-2">SDG 4</span>
+                    <h5 class="fw-bold">Quality Education</h5>
+                    <p class="small text-secondary mb-0">Supports access to educational materials, textbooks, notebooks, school bags, and stationery for children in care.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6">
+                <div class="sdg-card">
+                    <span class="badge bg-info text-dark mb-2">SDG 10</span>
+                    <h5 class="fw-bold">Reduced Inequalities</h5>
+                    <p class="small text-secondary mb-0">Improves visibility and equitable access to essential resources for disadvantaged seniors, children, and displaced individuals.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6">
+                <div class="sdg-card">
+                    <span class="badge bg-success mb-2">SDG 17</span>
+                    <h5 class="fw-bold">Partnerships for the Goals</h5>
+                    <p class="small text-secondary mb-0">Builds trusted, transparent partnerships connecting citizens, volunteers, academic institutions, and local welfare organizations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

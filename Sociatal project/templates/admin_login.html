@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Administrator Login – Sahaaya{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+                <div class="surface-card p-4 p-md-5 border-top border-4" style="border-top-color: var(--navy-900) !important;">
+                    <div class="text-center mb-4">
+                        <span class="need-icon mx-auto mb-3" style="background-color: var(--navy-900); color: #fff;">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </span>
+                        <h1 class="h3 section-heading mb-1">Administrator Portal</h1>
+                        <p class="text-secondary small mb-0">Authorized verification and governance access only.</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('admin_login') }}" class="needs-validation" novalidate>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="mb-3">
+                            <label for="adminIdentifier" class="form-label fw-semibold">Username or Email</label>
+                            <input type="text" id="adminIdentifier" name="identifier" value="{{ identifier or '' }}" class="form-control" required autofocus>
+                            <div class="invalid-feedback">Please enter your administrator username or email.</div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="adminPassword" class="form-label fw-semibold">Password</label>
+                            <input type="password" id="adminPassword" name="password" class="form-control" required>
+                            <div class="invalid-feedback">Please enter your password.</div>
+                        </div>
+                        <button type="submit" class="btn btn-navy w-100 py-2">
+                            <i class="fa-solid fa-lock-open me-2"></i>Sign In to Admin Dashboard
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

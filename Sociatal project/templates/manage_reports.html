@@ -1,0 +1,82 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Reported Information – Sahaaya Admin{% endblock %}
+
+{% block admin_content %}
+<div class="mb-4">
+    <h1 class="h3 section-heading mb-1">Reported Information Management</h1>
+    <p class="text-secondary small mb-0">Review supporter-submitted inaccuracy reports. Organizations are never automatically deleted from reports.</p>
+</div>
+
+<form method="GET" action="{{ url_for('manage_reports') }}" class="surface-card p-3 mb-4">
+    <div class="row g-2">
+        <div class="col-md-6">
+            <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search by organization, reason, description, or reporter...">
+        </div>
+        <div class="col-md-3">
+            <select name="status" class="form-select">
+                <option value="">All Report Statuses</option>
+                {% for st in report_statuses %}
+                    <option value="{{ st }}" {% if status_filter == st %}selected{% endif %}>{{ st }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-navy flex-grow-1">Filter</button>
+            <a href="{{ url_for('manage_reports') }}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
+{% if reports %}
+    <div class="d-grid gap-3">
+        {% for rep in reports %}
+        <div class="surface-card p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                <div>
+                    <span class="badge {% if rep.status == 'Resolved' %}bg-success{% elif rep.status == 'Reviewed' %}bg-info text-dark{% else %}bg-warning text-dark{% endif %} me-2">
+                        {{ rep.status }}
+                    </span>
+                    <span class="fw-bold text-navy">{{ rep.organization_name }}</span>
+                    <span class="small text-muted ms-1">({{ rep.area }}, {{ rep.city }} &bull; Org Status: {{ rep.verification_status }})</span>
+                </div>
+                <span class="small text-muted">Reported: {{ rep.created_at }}</span>
+            </div>
+
+            <div class="small mb-2">
+                <strong>Reason:</strong> {{ rep.reason }} &bull; <strong>Reported By:</strong> {{ rep.reported_by }}
+            </div>
+            <p class="small text-secondary bg-light p-3 rounded-3 border mb-3">{{ rep.description }}</p>
+
+            <form method="POST" action="{{ url_for('update_report', report_id=rep.id) }}" class="row g-2 align-items-center">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="col-md-2">
+                    <select name="status" class="form-select form-select-sm">
+                        {% for st in report_statuses %}
+                            <option value="{{ st }}" {% if rep.status == st %}selected{% endif %}>{{ st }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="admin_notes" value="{{ rep.admin_notes }}" class="form-control form-control-sm" placeholder="Administrator resolution notes...">
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="trigger_reverification" value="1" id="reverify{{ rep.id }}">
+                        <label class="form-check-label small" for="reverify{{ rep.id }}">Flag org for re-verification</label>
+                    </div>
+                </div>
+                <div class="col-md-2 d-flex gap-1 justify-content-end">
+                    <button type="submit" class="btn btn-teal btn-sm">Update</button>
+                    <a href="{{ url_for('edit_organization', org_id=rep.organization_id) }}" class="btn btn-outline-navy btn-sm">Edit Org</a>
+                </div>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="surface-card p-5 text-center text-muted">
+        No reports match the current filter criteria.
+    </div>
+{% endif %}
+{% endblock %}

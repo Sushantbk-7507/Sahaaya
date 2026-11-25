@@ -1,0 +1,126 @@
+/* Admin & User Dashboard Styles */
+
+.dashboard-shell {
+    display: flex;
+    min-height: calc(100vh - 68px);
+}
+
+.admin-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background-color: var(--navy-900);
+    color: #E2E8F0;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-sidebar-brand {
+    padding: 0 0.65rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 1rem;
+}
+
+.admin-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #CBD5E1;
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    transition: var(--transition);
+}
+
+.admin-nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+}
+
+.admin-nav-link.active {
+    background-color: var(--teal-600);
+    color: #FFFFFF;
+}
+
+.admin-main {
+    flex: 1 1 auto;
+    padding: 2rem;
+    min-width: 0;
+    background-color: var(--bg-page);
+}
+
+.kpi-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-xs);
+    height: 100%;
+}
+
+.kpi-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.analytics-bar-track {
+    height: 10px;
+    background-color: var(--bg-subtle);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.analytics-bar-fill {
+    height: 100%;
+    background-color: var(--teal-600);
+    border-radius: 999px;
+}
+
+.table-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
+}
+
+.table-card .table {
+    margin-bottom: 0;
+}
+
+.table-card th {
+    background-color: var(--bg-subtle);
+    color: var(--navy-900);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.85rem 1rem;
+}
+
+.table-card td {
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
+    font-size: 0.92rem;
+}
+
+.audit-item {
+    border-left: 2px solid var(--teal-600);
+    padding-left: 0.9rem;
+    margin-bottom: 0.9rem;
+}
+
+.user-dash-header {
+    background-color: var(--navy-900);
+    color: #FFFFFF;
+    border-radius: var(--radius-md);
+    padding: 1.75rem 2rem;
+}

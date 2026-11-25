@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" role="img" aria-label="Community Shelter Organization">
+  <rect width="480" height="300" fill="#F8FAFC"/>
+  <circle cx="390" cy="65" r="55" fill="#D1FAE5"/>
+  <circle cx="80" cy="235" r="60" fill="#DBEAFE"/>
+  <rect x="96" y="82" width="288" height="154" rx="18" fill="#0F2942"/>
+  <circle cx="176" cy="145" r="22" fill="#10B981"/>
+  <circle cx="240" cy="135" r="25" fill="#0D9488"/>
+  <circle cx="304" cy="145" r="22" fill="#10B981"/>
+  <path d="M140 205c0-20 16-32 36-32s36 12 36 32" fill="#FFFFFF" opacity="0.9"/>
+  <path d="M200 205c0-24 18-38 40-38s40 14 40 38" fill="#FFFFFF"/>
+  <path d="M268 205c0-20 16-32 36-32s36 12 36 32" fill="#FFFFFF" opacity="0.9"/>
+  <text x="240" y="274" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#0F2942">Community Shelter &amp; Support</text>
+</svg>

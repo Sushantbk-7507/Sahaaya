@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Sahaaya – Find Those Who Need Your Support{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="hero-badge">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Verified Social Welfare Discovery &bull; Bengaluru</span>
+                </div>
+                <h1 class="hero-title">Find Those Who Need Your Support.</h1>
+                <p class="hero-subtitle">
+                    Discover verified social welfare organizations, understand their needs and connect directly to make a meaningful difference.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{{ url_for('explore') }}" class="btn btn-teal btn-lg px-4">
+                        <i class="fa-solid fa-compass me-2"></i>Explore Organizations
+                    </a>
+                    <a href="{{ url_for('about') }}" class="btn btn-outline-light btn-lg px-4">
+                        How Sahaaya Works
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/hero-community.svg') }}" alt="Sahaaya Community Connection Illustration" class="img-fluid hero-visual w-100">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dynamic Impact Statistics -->
+<section class="py-5 bg-white border-bottom">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="need-icon mb-0"><i class="fa-solid fa-building-ngo"></i></div>
+                    <div>
+                        <div class="stat-value">{{ stats.total_orgs }}</div>
+                        <div class="stat-label">Total Registered Organizations</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="need-icon mb-0" style="background-color: var(--emerald-50); color: var(--emerald-600);">
+                        <i class="fa-solid fa-shield-check"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value">{{ stats.verified_orgs }}</div>
+                        <div class="stat-label">Verified Organizations</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="need-icon mb-0"><i class="fa-solid fa-layer-group"></i></div>
+                    <div>
+                        <div class="stat-value">{{ stats.category_count }}</div>
+                        <div class="stat-label">Core Welfare Categories</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Verified Organizations -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+            <div>
+                <span class="text-uppercase fw-bold small text-teal-700" style="color: var(--teal-700);">Trusted Directory</span>
+                <h2 class="section-heading mb-1">Featured Verified Organizations</h2>
+                <p class="text-secondary mb-0">Every listed profile has passed administrator verification before public publishing.</p>
+            </div>
+            <a href="{{ url_for('explore') }}" class="btn btn-outline-navy">
+                View All Verified Listings <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        {% if featured_orgs %}
+            <div class="row g-4">
+                {% for org in featured_orgs %}
+                <div class="col-md-6 col-lg-4">
+                    <article class="org-card">
+                        <div class="org-card-img-wrap">
+                            <img src="{{ url_for('static', filename='images/' + (org.image_filename or 'org-shelter.svg')) }}" alt="{{ org.organization_name }}" loading="lazy">
+                        </div>
+                        <div class="org-card-body">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                <span class="badge-category">{{ org.category }}</span>
+                                <span class="badge-verified"><i class="fa-solid fa-circle-check me-1"></i>Verified</span>
+                            </div>
+                            <h3 class="org-card-title">{{ org.organization_name }}</h3>
+                            <div class="org-card-meta">
+                                <i class="fa-solid fa-location-dot me-1 text-danger"></i>
+                                {{ org.area }}, {{ org.city }} &bull; {{ org.pincode }}
+                            </div>
+                            <p class="org-card-desc">
+                                {{ org.description[:125] }}{% if org.description|length > 125 %}...{% endif %}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                <span class="small fw-semibold text-secondary">
+                                    <i class="fa-solid fa-list-check me-1"></i>{{ org.req_count }} Listed Needs
+                                </span>
+                                <a href="{{ url_for('organization_details', org_id=org.id) }}" class="btn btn-navy btn-sm">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="surface-card p-5 text-center">
+                <i class="fa-solid fa-folder-open fa-2x text-muted mb-3"></i>
+                <h5>No Verified Organizations Available Yet</h5>
+                <p class="text-secondary mb-0">Administrators can onboard and verify organizations from the Admin Portal.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- How It Works: 5 Project Stages -->
+<section class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold small" style="color: var(--teal-700);">Transparent Workflow</span>
+            <h2 class="section-heading">How Sahaaya Works</h2>
+            <p class="text-secondary mx-auto" style="max-width: 640px;">
+                Five structured stages ensure accuracy, accountability, and direct human connection without intermediaries.
+            </p>
+        </div>
+        <div class="row g-3 row-cols-1 row-cols-md-3 row-cols-lg-5">
+            <div class="col">
+                <div class="step-card">
+                    <span class="step-number">1</span>
+                    <h6 class="fw-bold text-navy">Data Collection</h6>
+                    <p class="small text-secondary mb-0">Gather verified details, facilities, and itemized needs from welfare centers.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="step-card">
+                    <span class="step-number">2</span>
+                    <h6 class="fw-bold text-navy">Admin Verification</h6>
+                    <p class="small text-secondary mb-0">Administrators audit addresses, phone numbers, and legitimacy before approval.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="step-card">
+                    <span class="step-number">3</span>
+                    <h6 class="fw-bold text-navy">Portal Publishing</h6>
+                    <p class="small text-secondary mb-0">Only approved organizations become publicly discoverable on Sahaaya.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="step-card">
+                    <span class="step-number">4</span>
+                    <h6 class="fw-bold text-navy">Search and Filter</h6>
+                    <p class="small text-secondary mb-0">Supporters filter by category, area, city, or pincode to find nearby centers.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="step-card">
+                    <span class="step-number">5</span>
+                    <h6 class="fw-bold text-navy">Direct Support</h6>
+                    <p class="small text-secondary mb-0">Call, email, visit via map, or send a direct inquiry to coordinate help.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Assistance Categories -->
+<section class="py-5">
+    <div class="container">
+        <div class="mb-4">
+            <h2 class="section-heading">Assistance Categories</h2>
+            <p class="text-secondary">Organizations publish itemized requirements across five transparent categories.</p>
+        </div>
+        <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-5">
+            {% set cat_meta = [
+                ('Food', 'fa-bowl-food', 'Grains, groceries, nutrition supplements & meal supplies.'),
+                ('Clothing', 'fa-shirt', 'Uniforms, winter wear, footwear & hygiene textiles.'),
+                ('Educational Materials', 'fa-book-open', 'Notebooks, textbooks, stationery & learning kits.'),
+                ('Essential Supplies', 'fa-kit-medical', 'Bedding, first-aid kits, toiletries & mobility aids.'),
+                ('Other', 'fa-hands-helping', 'Volunteer support, equipment repairs & skill programs.')
+            ] %}
+            {% for cat_name, icon, desc in cat_meta %}
+            <div class="col">
+                <div class="need-tile">
+                    <div class="need-icon"><i class="fa-solid {{ icon }}"></i></div>
+                    <h6 class="fw-bold mb-1">{{ 'Other Requirements' if cat_name == 'Other' else cat_name }}</h6>
+                    <p class="small text-secondary mb-2">{{ desc }}</p>
+                    <span class="badge bg-light text-dark border">{{ req_counts.get(cat_name, 0) }} active needs</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- About Sahaaya & Community Participation -->
+<section class="py-5 bg-white border-top">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <h2 class="section-heading mb-3">Built for Reliability, Not Guesswork</h2>
+                <p class="text-secondary">
+                    Information about orphanages, old-age homes, and community shelters is often scattered or outdated. Sahaaya centralizes verified profiles, keeps assistance requirements current, and lets supporters report inaccuracies for rapid review.
+                </p>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <span class="facility-chip"><i class="fa-solid fa-ban text-teal-600"></i> No Payment Gateways</span>
+                    <span class="facility-chip"><i class="fa-solid fa-phone text-teal-600"></i> Direct Contact</span>
+                    <span class="facility-chip"><i class="fa-solid fa-flag text-teal-600"></i> Community Reporting</span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="surface-card p-4">
+                    <h5 class="fw-bold mb-2">Join the Community Effort</h5>
+                    <p class="text-secondary small mb-3">
+                        Create a free Supporter account to save and track your direct outreach inquiries, or start browsing verified organizations in Bengaluru right away.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{{ url_for('explore') }}" class="btn btn-navy">Browse Directory</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-teal">Register as Supporter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

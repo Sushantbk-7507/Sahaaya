@@ -1,0 +1,170 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Edit {{ org.organization_name }} – Sahaaya Admin{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+        <h1 class="h3 section-heading mb-1">Edit Organization</h1>
+        <p class="text-secondary small mb-0">
+            Current Status:
+            <span class="{% if org.verification_status == 'Approved' %}badge-verified{% elif org.verification_status == 'Pending' %}badge-pending{% elif org.verification_status == 'Rejected' %}badge-rejected{% else %}badge-correction{% endif %}">
+                {{ org.verification_status }}
+            </span>
+            {% if org.verification_status == 'Approved' %}
+                &bull; Editing core contact/address/facility details automatically triggers re-verification.
+            {% endif %}
+        </p>
+    </div>
+    <a href="{{ url_for('manage_organizations') }}" class="btn btn-outline-secondary btn-sm">Back to Organizations</a>
+</div>
+
+<form method="POST" action="{{ url_for('edit_organization', org_id=org.id) }}" enctype="multipart/form-data" class="surface-card p-4 mb-4 needs-validation" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-3">
+        <div class="col-md-7">
+            <label class="form-label fw-semibold">Organization Name</label>
+            <input type="text" name="organization_name" value="{{ org.organization_name }}" class="form-control" minlength="3" required>
+        </div>
+        <div class="col-md-5">
+            <label class="form-label fw-semibold">Category</label>
+            <select name="category" class="form-select" required>
+                {% for cat in org_categories %}
+                    <option value="{{ cat }}" {% if org.category == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea name="description" rows="3" class="form-control" minlength="20" required>{{ org.description }}</textarea>
+        </div>
+        <div class="col-12">
+            <label class="form-label fw-semibold">Address</label>
+            <input type="text" name="address" value="{{ org.address }}" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Area</label>
+            <input type="text" name="area" value="{{ org.area }}" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">City</label>
+            <input type="text" name="city" value="{{ org.city }}" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">State</label>
+            <input type="text" name="state" value="{{ org.state }}" class="form-control" required>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label fw-semibold">Pincode</label>
+            <input type="text" name="pincode" value="{{ org.pincode }}" class="form-control" pattern="\d{6}" maxlength="6" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Contact Number</label>
+            <input type="text" name="contact_number" value="{{ org.contact_number }}" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" name="email" value="{{ org.email }}" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Replace Image (Optional)</label>
+            <input type="file" name="image" class="form-control" accept=".png,.jpg,.jpeg,.webp">
+        </div>
+        <div class="col-12">
+            <label class="form-label fw-semibold">Facilities (comma-separated)</label>
+            <input type="text" name="facilities" value="{{ org.facilities }}" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-semibold">Data Source</label>
+            <input type="text" name="data_source" value="{{ org.data_source }}" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Date Checked</label>
+            <input type="date" name="last_checked_date" value="{{ org.last_checked_date }}" class="form-control">
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" name="is_sample_data" value="1" id="editSampleCheck" {% if org.is_sample_data %}checked{% endif %}>
+                <label class="form-check-label small fw-semibold" for="editSampleCheck">Sample Demo Record</label>
+            </div>
+        </div>
+        <div class="col-12 pt-2">
+            <button type="submit" class="btn btn-navy px-4">Save Organization Changes</button>
+        </div>
+    </div>
+</form>
+
+<!-- Inline Assistance Requirements Management for this Organization -->
+<div class="surface-card p-4">
+    <h2 class="h5 fw-bold text-navy mb-3">Assistance Requirements for {{ org.organization_name }}</h2>
+    <form method="POST" action="{{ url_for('add_requirement') }}" class="row g-2 align-items-end mb-4 p-3 bg-light rounded-3 border">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="organization_id" value="{{ org.id }}">
+        <input type="hidden" name="redirect_to" value="edit_org">
+        <div class="col-md-2">
+            <label class="form-label small fw-semibold">Category</label>
+            <select name="requirement_category" class="form-select form-select-sm" required>
+                {% for rc in req_categories %}<option value="{{ rc }}">{{ rc }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label small fw-semibold">Item Name</label>
+            <input type="text" name="item_name" class="form-control form-control-sm" required>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small fw-semibold">Quantity / Details</label>
+            <input type="text" name="quantity_or_details" class="form-control form-control-sm">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small fw-semibold">Priority</label>
+            <select name="priority" class="form-select form-select-sm">
+                {% for p in req_priorities %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-teal btn-sm w-100">Add Requirement</button>
+        </div>
+        <div class="col-12">
+            <input type="text" name="description" class="form-control form-control-sm" placeholder="Optional requirement description...">
+        </div>
+    </form>
+
+    {% if requirements %}
+        <div class="table-responsive">
+            <table class="table table-sm align-middle">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Priority</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requirements %}
+                    <tr>
+                        <td><span class="badge-category">{{ req.requirement_category }}</span></td>
+                        <td>
+                            <div class="fw-semibold">{{ req.item_name }}</div>
+                            <div class="small text-muted">{{ req.description }}</div>
+                        </td>
+                        <td class="small">{{ req.quantity_or_details }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ req.priority }}</span></td>
+                        <td class="text-end">
+                            <form method="POST" action="{{ url_for('delete_requirement', req_id=req.id) }}" class="d-inline" data-confirm="Remove requirement '{{ req.item_name }}'?">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="redirect_to" value="edit_org">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-muted small mb-0">No requirements added for this organization yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Organization Verification – Sahaaya Admin{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 section-heading mb-1">Mandatory Verification Queue</h1>
+        <p class="text-secondary small mb-0">Review details, facilities, and requirements before approving organizations for public visibility.</p>
+    </div>
+    <div class="btn-group btn-group-sm">
+        {% for st in ['Pending', 'Needs Correction', 'Approved', 'Rejected', 'All'] %}
+            <a href="{{ url_for('verification_queue', status=st) }}" class="btn {% if status_filter == st %}btn-navy{% else %}btn-outline-navy{% endif %}">{{ st }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        {% if organizations %}
+            <div class="d-grid gap-3">
+                {% for org in organizations %}
+                <div class="surface-card p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                        <div>
+                            <span class="badge-category me-1">{{ org.category }}</span>
+                            <span class="{% if org.verification_status == 'Approved' %}badge-verified{% elif org.verification_status == 'Pending' %}badge-pending{% elif org.verification_status == 'Rejected' %}badge-rejected{% else %}badge-correction{% endif %}">
+                                {{ org.verification_status }}
+                            </span>
+                            {% if org.is_sample_data %}<span class="badge-sample ms-1">Sample Demo</span>{% endif %}
+                        </div>
+                        <span class="small text-muted">Submitted: {{ org.created_at }}</span>
+                    </div>
+
+                    <h2 class="h5 fw-bold text-navy mb-1">{{ org.organization_name }}</h2>
+                    <p class="small text-secondary mb-2">{{ org.description }}</p>
+
+                    <div class="row g-2 small mb-3 bg-light p-3 rounded-3 border">
+                        <div class="col-md-6"><strong>Address:</strong> {{ org.address }}, {{ org.area }}, {{ org.city }} - {{ org.pincode }}</div>
+                        <div class="col-md-6"><strong>Contact:</strong> {{ org.contact_number }} &bull; {{ org.email }}</div>
+                        <div class="col-md-6"><strong>Facilities:</strong> {{ org.facilities }}</div>
+                        <div class="col-md-6"><strong>Source:</strong> {{ org.data_source }} ({{ org.last_checked_date or 'N/A' }})</div>
+                    </div>
+
+                    {% set org_reqs = reqs_by_org.get(org.id, []) %}
+                    <div class="mb-3">
+                        <div class="small fw-bold text-navy mb-1">Submitted Assistance Requirements ({{ org_reqs|length }}):</div>
+                        {% if org_reqs %}
+                            <ul class="small mb-0">
+                                {% for r in org_reqs %}
+                                    <li><strong>[{{ r.requirement_category }}]</strong> {{ r.item_name }} ({{ r.quantity_or_details or 'N/A' }}) &ndash; <em>{{ r.priority }}</em></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="small text-muted">None listed yet.</span>
+                        {% endif %}
+                    </div>
+
+                    <form method="POST" action="{{ url_for('process_verification', org_id=org.id) }}" class="border-top pt-3">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="mb-2">
+                            <input type="text" name="verification_notes" value="{{ org.verification_notes }}" class="form-control form-control-sm"
+                                   placeholder="Verification audit notes (required when rejecting or requesting correction)...">
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="submit" name="action" value="approve" class="btn btn-teal btn-sm">
+                                <i class="fa-solid fa-check me-1"></i> Approve &amp; Publish
+                            </button>
+                            <button type="submit" name="action" value="correction" class="btn btn-outline-primary btn-sm">
+                                <i class="fa-solid fa-rotate-left me-1"></i> Return for Correction
+                            </button>
+                            <button type="submit" name="action" value="reject" class="btn btn-outline-danger btn-sm">
+                                <i class="fa-solid fa-xmark me-1"></i> Reject
+                            </button>
+                            <a href="{{ url_for('edit_organization', org_id=org.id) }}" class="btn btn-outline-secondary btn-sm ms-auto">
+                                Edit Details
+                            </a>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="surface-card p-5 text-center text-secondary">
+                <i class="fa-solid fa-circle-check fa-2x text-success mb-2"></i>
+                <p class="mb-0">No organizations in the "{{ status_filter }}" verification queue.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="surface-card p-4">
+            <h2 class="h6 fw-bold text-navy mb-3"><i class="fa-solid fa-clock-rotate-left me-2 text-teal-600"></i>Verification Audit Log</h2>
+            {% for log in audit_logs %}
+                <div class="audit-item">
+                    <div class="small fw-bold text-dark">{{ log.action }}</div>
+                    <div class="small text-muted">
+                        Org #{{ log.organization_id }} &bull; {{ log.previous_status or 'New' }} &rarr; {{ log.new_status }}
+                    </div>
+                    {% if log.notes %}<div class="small text-secondary">{{ log.notes }}</div>{% endif %}
+                    <div class="small text-muted" style="font-size: 0.75rem;">
+                        {{ log.admin_username or 'System' }} &bull; {{ log.created_at }}
+                    </div>
+                </div>
+            {% else %}
+                <p class="small text-muted mb-0">No audit logs recorded yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+/* Responsive Breakpoints for Laptop, Tablet & Mobile */
+
+@media (max-width: 991.98px) {
+    .hero-section {
+        padding: 3.25rem 0;
+    }
+
+    .dashboard-shell {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .admin-sidebar-nav {
+        display: none;
+    }
+
+    .admin-sidebar-nav.open {
+        display: block;
+        margin-top: 0.75rem;
+    }
+
+    .admin-main {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .hero-title {
+        font-size: 1.85rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .stat-value {
+        font-size: 1.7rem;
+    }
+
+    .user-dash-header {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .btn-navy,
+    .btn-teal,
+    .btn-outline-navy {
+        padding: 0.55rem 1rem;
+        font-size: 0.92rem;
+    }
+
+    .org-card-img-wrap {
+        height: 160px;
+    }
+}

@@ -1,0 +1,98 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Manage Organizations – Sahaaya Admin{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 section-heading mb-1">Manage Organizations</h1>
+        <p class="text-secondary small mb-0">View, filter, edit, or remove organization listings across all verification stages.</p>
+    </div>
+    <a href="{{ url_for('add_organization') }}" class="btn btn-navy">
+        <i class="fa-solid fa-circle-plus me-1"></i> Add Organization
+    </a>
+</div>
+
+<form method="GET" action="{{ url_for('manage_organizations') }}" class="surface-card p-3 mb-4">
+    <div class="row g-2">
+        <div class="col-md-5">
+            <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search name, area, city, or pincode...">
+        </div>
+        <div class="col-md-3">
+            <select name="status" class="form-select">
+                <option value="">All Statuses</option>
+                {% for st in verification_statuses %}
+                    <option value="{{ st }}" {% if status_filter == st %}selected{% endif %}>{{ st }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for cat in org_categories %}
+                    <option value="{{ cat }}" {% if category_filter == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-teal flex-grow-1">Filter</button>
+            <a href="{{ url_for('manage_organizations') }}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
+<div class="table-card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Organization</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Needs</th>
+                    <th>Verification</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for org in organizations %}
+                <tr>
+                    <td>
+                        <div class="fw-bold text-navy">{{ org.organization_name }}</div>
+                        <div class="small text-muted">{{ org.contact_number }} &bull; {{ org.email }}</div>
+                    </td>
+                    <td><span class="badge-category">{{ org.category }}</span></td>
+                    <td class="small">{{ org.area }}, {{ org.city }} ({{ org.pincode }})</td>
+                    <td><span class="badge bg-light text-dark border">{{ org.req_count }}</span></td>
+                    <td>
+                        <span class="{% if org.verification_status == 'Approved' %}badge-verified{% elif org.verification_status == 'Pending' %}badge-pending{% elif org.verification_status == 'Rejected' %}badge-rejected{% else %}badge-correction{% endif %}">
+                            {{ org.verification_status }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-1">
+                            {% if org.verification_status == 'Approved' %}
+                                <a href="{{ url_for('organization_details', org_id=org.id) }}" class="btn btn-sm btn-outline-secondary" title="View Public Profile">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            {% endif %}
+                            <a href="{{ url_for('edit_organization', org_id=org.id) }}" class="btn btn-sm btn-outline-navy" title="Edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('delete_organization', org_id=org.id) }}" data-confirm="Delete '{{ org.organization_name }}' and all linked records permanently?">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center py-4 text-muted">No organizations match the current filters.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

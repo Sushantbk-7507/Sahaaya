@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found (404) – Sahaaya{% endblock %}
+{% block content %}
+<section class="py-5">
+    <div class="container text-center">
+        <div class="surface-card p-5 mx-auto" style="max-width: 560px;">
+            <div class="display-4 fw-bold text-navy mb-2">404</div>
+            <h1 class="h4 fw-bold mb-2">Organization or Page Not Found</h1>
+            <p class="text-secondary mb-4">The requested page or verified organization profile could not be found.</p>
+            <div class="d-flex justify-content-center gap-2">
+                <a href="{{ url_for('index') }}" class="btn btn-navy">Go Home</a>
+                <a href="{{ url_for('explore') }}" class="btn btn-teal">Explore Organizations</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" role="img" aria-label="Children Welfare Organization">
+  <rect width="480" height="300" fill="#EFF6FF"/>
+  <circle cx="410" cy="60" r="55" fill="#DBEAFE"/>
+  <circle cx="75" cy="245" r="70" fill="#CCFBF1"/>
+  <rect x="110" y="95" width="260" height="145" rx="16" fill="#0F2942"/>
+  <polygon points="95,105 240,38 385,105" fill="#0D9488"/>
+  <rect x="206" y="155" width="68" height="85" rx="8" fill="#10B981"/>
+  <rect x="135" y="135" width="44" height="44" rx="6" fill="#E0F2FE"/>
+  <rect x="301" y="135" width="44" height="44" rx="6" fill="#E0F2FE"/>
+  <circle cx="240" cy="76" r="14" fill="#FFFFFF"/>
+  <text x="240" y="276" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#0F2942">Children's Care &amp; Education</text>
+</svg>

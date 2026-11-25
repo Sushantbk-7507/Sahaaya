@@ -1,0 +1,195 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Admin Dashboard – Sahaaya{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 section-heading mb-1">Administrator Dashboard</h1>
+        <p class="text-secondary small mb-0">Live oversight of organization verification, supporter activity, and reported information.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('verification_queue') }}" class="btn btn-teal btn-sm">
+            <i class="fa-solid fa-shield-check me-1"></i> Review Pending ({{ counts.pending_orgs }})
+        </a>
+        <a href="{{ url_for('add_organization') }}" class="btn btn-navy btn-sm">
+            <i class="fa-solid fa-plus me-1"></i> Add Organization
+        </a>
+    </div>
+</div>
+
+<!-- KPI Row -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-2">
+        <div class="kpi-card">
+            <div class="small text-muted fw-semibold">Total Users</div>
+            <div class="h3 fw-bold text-navy mb-0">{{ counts.total_users }}</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="kpi-card">
+            <div class="small text-muted fw-semibold">Total Orgs</div>
+            <div class="h3 fw-bold text-navy mb-0">{{ counts.total_orgs }}</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="kpi-card">
+            <div class="small text-muted fw-semibold">Verified</div>
+            <div class="h3 fw-bold text-success mb-0">{{ counts.verified_orgs }}</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="kpi-card">
+            <div class="small text-muted fw-semibold">Pending</div>
+            <div class="h3 fw-bold text-warning mb-0">{{ counts.pending_orgs }}</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="kpi-card">
+            <div class="small text-muted fw-semibold">Rejected</div>
+            <div class="h3 fw-bold text-danger mb-0">{{ counts.rejected_orgs }}</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="kpi-card">
+            <div class="small text-muted fw-semibold">Total Reports</div>
+            <div class="h3 fw-bold text-navy mb-0">{{ counts.total_reports }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Pandas / NumPy Analytics Breakdown -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="surface-card p-4 h-100">
+            <h2 class="h6 fw-bold text-navy mb-3"><i class="fa-solid fa-chart-simple me-2 text-teal-600"></i>Organizations by Category</h2>
+            {% set total_for_bars = counts.total_orgs if counts.total_orgs > 0 else 1 %}
+            {% for cat, cnt in analytics.category_counts.items() %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between small fw-semibold mb-1">
+                        <span>{{ cat }}</span>
+                        <span>{{ cnt }}</span>
+                    </div>
+                    <div class="analytics-bar-track">
+                        <div class="analytics-bar-fill" style="width: {{ (cnt * 100 / total_for_bars)|round|int }}%;"></div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-secondary small mb-0">No organization analytics available yet.</p>
+            {% endfor %}
+            <div class="mt-3 pt-3 border-top d-flex flex-wrap gap-3 small text-secondary">
+                <span><strong>Avg Needs / Verified Org:</strong> {{ analytics.avg_reqs_per_verified_org }}</span>
+                <span><strong>High Priority Needs:</strong> {{ analytics.high_priority_req_count }}</span>
+                <span><strong>Supporter Inquiries:</strong> {{ counts.total_inquiries }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="surface-card p-4 h-100">
+            <h2 class="h6 fw-bold text-navy mb-3"><i class="fa-solid fa-location-dot me-2 text-teal-600"></i>Top Coverage Areas &amp; Need Priorities</h2>
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <div class="small fw-bold text-muted text-uppercase mb-2">Bengaluru Localities</div>
+                    <ul class="list-unstyled small d-grid gap-1 mb-0">
+                        {% for area, cnt in analytics.top_areas.items() %}
+                            <li class="d-flex justify-content-between"><span>{{ area }}</span><strong>{{ cnt }}</strong></li>
+                        {% else %}
+                            <li class="text-muted">No area data.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-sm-6">
+                    <div class="small fw-bold text-muted text-uppercase mb-2">Requirement Priorities</div>
+                    <ul class="list-unstyled small d-grid gap-1 mb-0">
+                        {% for prio, cnt in analytics.requirement_priority_counts.items() %}
+                            <li class="d-flex justify-content-between"><span>{{ prio }}</span><strong>{{ cnt }}</strong></li>
+                        {% else %}
+                            <li class="text-muted">No requirement data.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Submissions & Reports -->
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="table-card">
+            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                <h2 class="h6 fw-bold mb-0">Recent Organization Submissions</h2>
+                <a href="{{ url_for('manage_organizations') }}" class="small fw-semibold">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Organization</th>
+                            <th>Area</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for org in recent_orgs %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('edit_organization', org_id=org.id) }}" class="fw-semibold text-dark">{{ org.organization_name }}</a>
+                                <div class="small text-muted">{{ org.category }}</div>
+                            </td>
+                            <td>{{ org.area }}</td>
+                            <td>
+                                <span class="{% if org.verification_status == 'Approved' %}badge-verified{% elif org.verification_status == 'Pending' %}badge-pending{% elif org.verification_status == 'Rejected' %}badge-rejected{% else %}badge-correction{% endif %}">
+                                    {{ org.verification_status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3" class="text-center text-muted py-3">No organizations yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="table-card">
+            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                <h2 class="h6 fw-bold mb-0">Recent Inaccuracy Reports</h2>
+                <a href="{{ url_for('manage_reports') }}" class="small fw-semibold">Manage Reports</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Organization</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rep in recent_reports %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ rep.organization_name }}</div>
+                                <div class="small text-muted">By: {{ rep.reported_by }}</div>
+                            </td>
+                            <td class="small">{{ rep.reason }}</td>
+                            <td>
+                                <span class="badge {% if rep.status == 'Resolved' %}bg-success{% elif rep.status == 'Reviewed' %}bg-info text-dark{% else %}bg-warning text-dark{% endif %}">
+                                    {{ rep.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3" class="text-center text-muted py-3">No reports submitted.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

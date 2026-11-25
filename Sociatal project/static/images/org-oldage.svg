@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" role="img" aria-label="Senior Care Organization">
+  <rect width="480" height="300" fill="#F0FDFA"/>
+  <circle cx="90" cy="70" r="52" fill="#CCFBF1"/>
+  <circle cx="400" cy="235" r="65" fill="#E0F2FE"/>
+  <rect x="100" y="88" width="280" height="150" rx="18" fill="#FFFFFF" stroke="#0F2942" stroke-width="4"/>
+  <rect x="100" y="88" width="280" height="38" rx="14" fill="#0F2942"/>
+  <circle cx="185" cy="175" r="28" fill="#0D9488" opacity="0.18"/>
+  <path d="M185 162c-8 0-14 6-14 13 0 11 14 21 14 21s14-10 14-21c0-7-6-13-14-13z" fill="#0D9488"/>
+  <rect x="235" y="154" width="115" height="14" rx="5" fill="#0F2942"/>
+  <rect x="235" y="178" width="88" height="10" rx="5" fill="#64748B" opacity="0.6"/>
+  <rect x="235" y="198" width="66" height="10" rx="5" fill="#10B981"/>
+  <text x="240" y="274" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#0F2942">Senior Citizens Sanctuary</text>
+</svg>

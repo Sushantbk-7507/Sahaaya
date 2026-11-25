@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Verified Organizations – Sahaaya{% endblock %}
+
+{% block content %}
+<section class="py-4 bg-white border-bottom">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+            <div>
+                <h1 class="h3 section-heading mb-1">Explore Verified Organizations</h1>
+                <p class="text-secondary small mb-0">Search by organization name, city, area, or 6-digit pincode. Only administrator-verified profiles appear here.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-light text-dark border px-3 py-2">
+                    <strong>{{ total_count }}</strong> verified organization{{ '' if total_count == 1 else 's' }} found
+                </span>
+            </div>
+        </div>
+
+        <form id="exploreFilterForm" method="GET" action="{{ url_for('explore') }}" class="surface-card p-3">
+            <div class="row g-2 align-items-center">
+                <div class="col-lg-5">
+                    <div class="search-input-wrap">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                            <input type="text"
+                                   id="exploreSearchInput"
+                                   name="q"
+                                   value="{{ q }}"
+                                   class="form-control"
+                                   placeholder="Search name, area (e.g. Indiranagar), city, or pincode..."
+                                   autocomplete="off">
+                        </div>
+                        <div id="searchSuggestionsBox" class="search-suggestions"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3">
+                    <select id="exploreCategorySelect" name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        {% for cat in org_categories %}
+                            <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4 col-lg-2">
+                    <select name="sort" class="form-select">
+                        <option value="name_asc" {% if sort == 'name_asc' %}selected{% endif %}>Name (A–Z)</option>
+                        <option value="name_desc" {% if sort == 'name_desc' %}selected{% endif %}>Name (Z–A)</option>
+                        <option value="recent" {% if sort == 'recent' %}selected{% endif %}>Recently Verified</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 col-lg-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-navy flex-grow-1">
+                        <span id="searchLoadingSpinner" class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
+                        Filter
+                    </button>
+                    {% if q or selected_category or sort != 'name_asc' %}
+                        <a href="{{ url_for('explore') }}" class="btn btn-outline-secondary" title="Clear Filters">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        {% if organizations %}
+            <div class="row g-4">
+                {% for org in organizations %}
+                <div class="col-md-6 col-lg-4">
+                    <article class="org-card">
+                        <div class="org-card-img-wrap">
+                            <img src="{{ url_for('static', filename='images/' + (org.image_filename or 'org-shelter.svg')) }}" alt="{{ org.organization_name }}" loading="lazy">
+                        </div>
+                        <div class="org-card-body">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                <span class="badge-category">{{ org.category }}</span>
+                                <span class="badge-verified"><i class="fa-solid fa-circle-check me-1"></i>Verified</span>
+                            </div>
+                            <h2 class="org-card-title">{{ org.organization_name }}</h2>
+                            <div class="org-card-meta">
+                                <i class="fa-solid fa-location-dot me-1 text-danger"></i>
+                                {{ org.area }}, {{ org.city }} &bull; {{ org.pincode }}
+                            </div>
+                            {% if org.is_sample_data %}
+                                <div class="mb-2">
+                                    <span class="badge-sample"><i class="fa-solid fa-flask me-1"></i>Sample Demo Record</span>
+                                </div>
+                            {% endif %}
+                            <p class="org-card-desc">
+                                {{ org.description[:135] }}{% if org.description|length > 135 %}...{% endif %}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                <span class="small fw-semibold text-secondary">
+                                    <i class="fa-solid fa-boxes-stacked me-1"></i>{{ org.req_count }} Needs
+                                </span>
+                                <a href="{{ url_for('organization_details', org_id=org.id) }}" class="btn btn-navy btn-sm">
+                                    View Details <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if total_pages > 1 %}
+            <nav aria-label="Organization pagination" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {% if current_page <= 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('explore', q=q, category=selected_category, sort=sort, page=current_page - 1) }}">Previous</a>
+                    </li>
+                    {% for p in range(1, total_pages + 1) %}
+                    <li class="page-item {% if p == current_page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('explore', q=q, category=selected_category, sort=sort, page=p) }}">{{ p }}</a>
+                    </li>
+                    {% endfor %}
+                    <li class="page-item {% if current_page >= total_pages %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('explore', q=q, category=selected_category, sort=sort, page=current_page + 1) }}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+            {% endif %}
+        {% else %}
+            <div class="surface-card p-5 text-center">
+                <i class="fa-solid fa-magnifying-glass fa-2x text-muted mb-3"></i>
+                <h4>No Matching Verified Organizations Found</h4>
+                <p class="text-secondary mb-3">
+                    Try adjusting your search keywords, searching a nearby Bengaluru area or pincode, or clearing the active category filter.
+                </p>
+                <a href="{{ url_for('explore') }}" class="btn btn-teal">Clear All Filters</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
+{% endblock %}
